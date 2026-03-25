@@ -90,7 +90,7 @@
 
   async function obterDadosAr() {
     try {
-      const url = `https://api.waqi.info/feed/geo:${LAT};${LON}/?token=${MEU_TOKEN}`;
+    const url = `https://api.waqi.info/feed/sao-paulo/?token=${MEU_TOKEN}`;
       const response = await fetch(url);
       const json = await response.json();
 
