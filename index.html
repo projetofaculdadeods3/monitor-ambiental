@@ -54,6 +54,12 @@
       Este projeto tem como objetivo disponibilizar informações sobre temperatura e umidade do ar na Zona Leste de São Paulo,
       auxiliando a população na prevenção de desconfortos relacionados ao clima.
     </p>
+    <div class="card">
+  <h2>Qualidade do ar em São Paulo</h2>
+  <p><strong>AQI:</strong> <span id="aqi-valor">--</span></p>
+  <p><strong>Status:</strong> <span id="aqi-status">Carregando...</span></p>
+  <p><strong>Estação:</strong> <span id="estacao">-</span></p>
+    </div>
   </div>
 
   <div class="card">
@@ -76,6 +82,49 @@
   </div>
 
 </div>
+  <script>
+  const MEU_TOKEN = "demo";
+
+  const LAT = -23.5505;
+  const LON = -46.6333;
+
+  async function obterDadosAr() {
+    try {
+      const url = `https://api.waqi.info/feed/geo:${LAT};${LON}/?token=${MEU_TOKEN}`;
+      const response = await fetch(url);
+      const json = await response.json();
+
+      if (json.status === "ok") {
+        const dados = json.data;
+        const aqi = dados.aqi;
+
+        document.getElementById("aqi-valor").innerText = aqi;
+        document.getElementById("estacao").innerText = dados.city.name || "São Paulo";
+        atualizarInterface(aqi);
+      } else {
+        document.getElementById("aqi-status").innerText = "Indisponível";
+      }
+    } catch (erro) {
+      document.getElementById("aqi-status").innerText = "Erro ao carregar";
+    }
+  }
+
+  function atualizarInterface(aqi) {
+    const statusEl = document.getElementById("aqi-status");
+
+    if (aqi <= 50) {
+      statusEl.innerText = "Bom";
+    } else if (aqi <= 100) {
+      statusEl.innerText = "Moderado";
+    } else if (aqi <= 150) {
+      statusEl.innerText = "Ruim para grupos sensíveis";
+    } else {
+      statusEl.innerText = "Ruim";
+    }
+  }
+
+  obterDadosAr();
+    </script>
 
 </body>
 </html>
